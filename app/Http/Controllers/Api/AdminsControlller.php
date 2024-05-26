@@ -135,7 +135,7 @@ class AdminsControlller extends Controller
         // Return the admin profile data
         return response()->json([
             "status" => 1,
-            "message" => "Admin Profile",
+            "message" => "بروفايل الادمن",
             "data" => $admin_data
         ]);
 
@@ -150,13 +150,22 @@ class AdminsControlller extends Controller
             $admin_deleted->delete();
             return response()->json([
                 "status"=>true,
-                "message"=>"Admin has been deleted Successfully "
+                "message"=>"تم حذف الادمن بنجاح "
             ]);
         }else{
             return response()->json([
                 "status"=>false,
-                "message"=>"Invalid Informations "
+                "message"=>"معومات خاطئه "
             ],404);
         }
+    }
+
+    public function logout(){
+        auth()->logout();
+
+        return response()->json([
+            "status"=>1,
+            "message"=>"تم تسجيل الخروج بنجاح "
+        ]);
     }
 }
