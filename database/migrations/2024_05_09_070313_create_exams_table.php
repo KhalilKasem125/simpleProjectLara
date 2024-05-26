@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('exams', function (Blueprint $table) {
+            $table->id();
+           // $table->integer('subject_id')->unsigned();
+            $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
+            $table->string("Exam_Name");
+            $table->enum("Exam_Type",["Quiz" , "Exam"]);
+            $table->integer('qestions_number');
+            $table->integer('success_degree');
+            $table->dateTime('exam_day_start_point');
+            $table->dateTime('exam_day_end_point');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('exams');
+    }
+};
