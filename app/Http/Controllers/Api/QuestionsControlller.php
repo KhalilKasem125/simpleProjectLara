@@ -28,7 +28,7 @@ class QuestionsControlller extends Controller
         if($question){
             return response()->json([
                 'status'=>true ,
-                'message'=>"the Question has been saved successfully "
+                'message'=>"تم حفظ السؤال  "
             ]);
         }else{
             return response()->json([
@@ -37,6 +37,7 @@ class QuestionsControlller extends Controller
             ]);
         }
     }
+
     public function setQuesti(Request $request , $id ){
         //Validations
         $request->validate([
@@ -75,7 +76,9 @@ class QuestionsControlller extends Controller
             ], 422); // Use 422 Unprocessable Entity status code
         }
     }
+
     public function setQuestion(Request $request , $id ){
+
         //Validations
         $request->validate([
             // 'question_text'=>'required|unique:questions',
@@ -98,25 +101,27 @@ class QuestionsControlller extends Controller
             if($question){
                 return response()->json([
                     'status'=>true ,
-                    'message'=>"the Question has been saved successfully "
+                    'message'=>"تم حفظ السؤال  "
                 ]);
             }else{
                 return response()->json([
                     'status'=>false ,
-                    'message'=>"Invalid Informations "
+                    'message'=>"معلومات خاطئة  "
                 ]);
             }
         } else {
             // Return an error response if the limit is reached
             return response()->json([
                 'status'=>false ,
-                'message'=>"You have reached the maximum number of questions for this exam."
+                'message'=>"قد وصلت الى الحد الاعلى المسموح به لاضافه الاسئله"
             ], 422); // Use 422 Unprocessable Entity status code
         }
     }
 
 
     public function getQuestions($id){
+        
+
         $questions = Exam::find($id)->questions ;
 
         if($questions){
@@ -128,7 +133,7 @@ class QuestionsControlller extends Controller
         }else{
             return response()->json([
                 'status'=>false ,
-                'message'=>"There are no questions"
+                'message'=>"لا يوجد اسئلة "
             ]);
         }
     }

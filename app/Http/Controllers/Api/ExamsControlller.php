@@ -41,7 +41,7 @@ class ExamsControlller extends Controller
         //sending response
         return response()->json([
             'status'=>true,
-            'message'=>'exam has been add successfully '
+            'message'=>'تم اضافة الكتاب بنجاح '
         ]);
 
     }
@@ -59,7 +59,7 @@ class ExamsControlller extends Controller
         }else{
             return response()->json([
                 'status'=>true,
-                'message'=>"Subject hasn't exams yet ",
+                'message'=>"المادة ليس لها امتحانات بعد  ",
             ]);
         }
     }
@@ -68,12 +68,13 @@ class ExamsControlller extends Controller
     {
 
 
+
         $exam = Exam::with('questions.options')->find($id);
 
         if (!$exam) {
             return response()->json([
                 'status' => false,
-                'message' => 'Exam not found'
+                'message' => 'الامتحان ليس موجودا'
             ], 404); // Use a 404 Not Found status code if the exam doesn't exist
         }
 
@@ -86,12 +87,13 @@ class ExamsControlller extends Controller
     public function getExamTemplateForWeb($id)
     {
 
+
         $exam = Exam::with('questions.options')->find($id);
 
         if (!$exam) {
             return response()->json([
                 'status' => false,
-                'message' => 'Exam not found'
+                'message' => 'الامتحان ليس موجودا'
             ], 404); // Use a 404 Not Found status code if the exam doesn't exist
         }
 
@@ -103,6 +105,7 @@ class ExamsControlller extends Controller
 
     public function submitExam(Request $request, $examId)
     {
+
 
         $user_id = auth()->user()->id;
 
@@ -116,7 +119,7 @@ class ExamsControlller extends Controller
         // 2. Fetch the exam:
         $exam = Exam::with('questions.options')->find($examId);
         if (!$exam) {
-            return response()->json(['status' => false, 'message' => 'Exam not found'], 404);
+            return response()->json(['status' => false, 'message' => 'الامتحان غير موجود '], 404);
         }
 
         // 3. Process answers and calculate score:
@@ -181,7 +184,7 @@ class ExamsControlller extends Controller
         if (!$exam) {
             return response()->json([
                 'status' => false,
-                'message' => 'Exam not found.'
+                'message' => 'الامتحان غير موجود.'
             ], 404);
         }
 
@@ -190,7 +193,7 @@ class ExamsControlller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Exam deleted successfully.'
+            'message' => 'تم حذف الامتحان بنجاح .'
         ]);
     }
 

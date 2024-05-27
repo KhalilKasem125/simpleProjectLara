@@ -38,12 +38,12 @@ class OptionsControlller extends Controller
         if($option){
             return response()->json([
                 'status'=>true ,
-                'message'=>"the option has been saved successfully "
+                'message'=>"تم حفظ الخيار بنجاح  "
             ]);
         }else{
             return response()->json([
                 'status'=>false ,
-                'message'=>"Invalid Informations "
+                'message'=>"معلومات خاطئة  "
             ]);
         }
 
@@ -51,6 +51,7 @@ class OptionsControlller extends Controller
 
     public function getOptions($id)
     {
+
         $options = Question::find($id)->options;
 
         if($options){
@@ -62,10 +63,10 @@ class OptionsControlller extends Controller
         }else{
             return response()->json([
                 'status'=>false ,
-                'message'=>"There are no options"
+                'message'=>"لا يوجد خيارات "
             ]);
         }
     }
 
-    
+
 }

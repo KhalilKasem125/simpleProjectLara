@@ -48,7 +48,7 @@ class FilesControlller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'PDFs retrieved successfully',
+            'message' => 'تم استرجاع الملف بنجاح',
             'data' => $pdfData,
         ]);
     }
@@ -61,7 +61,7 @@ class FilesControlller extends Controller
         if (!$pdf) {
             return response()->json([
                 'status' => false,
-                'message' => 'PDF not found.'
+                'message' => 'الملف غير موجود'
             ], 404);
         }
 
@@ -75,7 +75,7 @@ class FilesControlller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'PDF deleted successfully.'
+            'message' => 'تم حذف الملف بنجاح'
         ]);
     }
 }

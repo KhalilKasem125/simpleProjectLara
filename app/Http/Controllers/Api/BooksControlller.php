@@ -11,6 +11,7 @@ class BooksControlller extends Controller
 {
     public function storeBook(Request $request  , $id)
     {
+
         $request->validate([
             'book_file' => 'required|file|max:10240|mimes:pdf,docx,xlsx', // Validate as a PDF file
             'book_name' => 'required',
@@ -31,7 +32,7 @@ class BooksControlller extends Controller
 
         return response()->json([
             "status" => true,
-            "message" => "The Book has been saved successfully"
+            "message" => "تمت اضافة الكتاب بنجاح"
         ]);
     }
 
@@ -53,10 +54,11 @@ class BooksControlller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Books retrieved successfully',
+            'message' => 'تم استرجاع الكتب بنجاح ',
             'data' => $pdfData,
         ]);
     }
+
     public function deleteBook($id)
     {
         // Find the PDF object
@@ -79,7 +81,8 @@ class BooksControlller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'PDF deleted successfully.'
+            'message' => 'تم حذف الكتاب بنجاح '
         ]);
     }
+
 }
