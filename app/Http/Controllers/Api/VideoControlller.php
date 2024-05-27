@@ -26,12 +26,13 @@ class VideoControlller extends Controller
 
         return response()->json([
             "status"=>true,
-            "message"=>"the video has been saved successfully"
+            "message"=>"تم اضافة الفيديو بنجاح "
         ]);
     }
 
     public function getVideos($id)
     {
+
         // Fetch videos (adjust query as needed)
         $videos = Subject::find($id)->videos;
 
@@ -48,11 +49,9 @@ class VideoControlller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Videos retrieved successfully',
+            'message' => 'تم استرجاع الفيديوهات',
             'data' => $videoData,
         ]);
     }
-
-
 
 }

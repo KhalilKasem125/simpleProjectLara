@@ -11,6 +11,7 @@ class SubjectsControlller extends Controller
 
     //this subject only the admin can Add
     public function addSubject(Request $request){
+
         //validation
         $request->validate([
             "subject_name"=>"required"
@@ -22,12 +23,13 @@ class SubjectsControlller extends Controller
         //sending response
         return response()->json([
             "status"=>true,
-            "messge"=>"subject has been created successfully"
+            "messge"=>"تم انشاء المادة بنجاح "
         ]);
     }
     //this subject only the admin can delete
     public function deleteSubject($id)
     {
+
         //object deleted
         $sub_deleted = Subject::find($id);
 
@@ -35,12 +37,12 @@ class SubjectsControlller extends Controller
             $sub_deleted->delete();
             return response()->json([
                 "status"=>true ,
-                "message"=>"The Subject has been deleted Successfully"
+                "message"=>"تم حذف المادة بنجاح "
             ]);
         }else{
             return response()->json([
                 "status"=>false ,
-                "message"=>"The Subject is not found "
+                "message"=>"المادة غير موجودة"
             ],400);
         }
     }
@@ -50,12 +52,13 @@ class SubjectsControlller extends Controller
 
         return response()->json([
             "status"=>true,
-            "message"=>"the all subjects",
+            "message"=>"كل المواد",
             "Subjects"=>$subjects
         ]);
     }
     //this is for the admins only can use this property
     public function getSingleSubject($id){
+
         $subject_wanted = Subject::find($id);
 
         if($subject_wanted){
@@ -67,9 +70,32 @@ class SubjectsControlller extends Controller
         }else{
             return response()->json([
                 "status"=>false,
-                "message"=>"the subjects is not found ",
+                "message"=>"المادة غير موجودة ",
             ]);
         }
     }
 
+    public function getOptions($id)
+    {
+        $subject = Subject::with(['videos', 'photos', 'files', 'books', 'teachers', 'exams'])->findOrFail($id);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'محتويات الماده',
+            'data' => [
+                'vidos'=>'videos',
+                'videos_num' => $subject->videos->count(),
+                'photos'=>'photos',
+                'photos_num' => $subject->photos->count(),
+                'photos'=>'photos',
+                'files_num' => $subject->files->count(),
+                'files'=>'files',
+                'books_num' => $subject->books->count(),
+                'books'=>'books',
+                'teachers_num' => $subject->teachers->count(),
+                'exams'=>'exams',
+                'exams_num' => $subject->exams->count(),
+            ],
+        ]);
+    }
 }

@@ -9,76 +9,76 @@ use Illuminate\Http\Request;
 
 class QuestionsControlller extends Controller
 {
-    public function setQuestio(Request $request , $id ){
-        //Validations
-        //also we have difficulty and its an enumeration between  three choices (hard ,easy ,medium)
-        //but this can be nullable so we dont want to validate to be optionally added
-        $request->validate([
-            'question_text'=>'required',
-        ]);
+    // public function setQuestio(Request $request , $id ){
 
-        //object creating
-        $question = Question::create([
-            'question_text'=>$request->question_text,
-            'exam_id'=>$id,
-            'difficulty'=>$request->difficulty
-        ]);
+    //     //Validations
+    //     //also we have difficulty and its an enumeration between  three choices (hard ,easy ,medium)
+    //     //but this can be nullable so we dont want to validate to be optionally added
+    //     $request->validate([
+    //         'question_text'=>'required',
+    //     ]);
 
-        //sending response
-        if($question){
-            return response()->json([
-                'status'=>true ,
-                'message'=>"تم حفظ السؤال  "
-            ]);
-        }else{
-            return response()->json([
-                'status'=>false ,
-                'message'=>"Invalid Informations "
-            ]);
-        }
-    }
+    //     //object creating
+    //     $question = Question::create([
+    //         'question_text'=>$request->question_text,
+    //         'exam_id'=>$id,
+    //         'difficulty'=>$request->difficulty
+    //     ]);
 
-    public function setQuesti(Request $request , $id ){
-        //Validations
-        $request->validate([
-            'question_text'=>'required|unique:questions',
-        ]);
+    //     //sending response
+    //     if($question){
+    //         return response()->json([
+    //             'status'=>true ,
+    //             'message'=>"تم حفظ السؤال  "
+    //         ]);
+    //     }else{
+    //         return response()->json([
+    //             'status'=>false ,
+    //             'message'=>"معلومات خاطئه  "
+    //         ]);
+    //     }
+    // }
 
-        // Get the Exam record
-        $exam = Exam::find($id);
+    // public function setQuesti(Request $request , $id ){
+    //     //Validations
+    //     $request->validate([
+    //         'question_text'=>'required|unique:questions',
+    //     ]);
 
-        // Check if the number of existing questions is less than the allowed number
-        if ($exam->questions()->count() < $exam->questions_number) {
-            //object creating
-            $question = Question::create([
-                'question_text'=>$request->question_text,
-                'exam_id'=>$id,
-                'difficulty'=>$request->difficulty
-            ]);
+    //     // Get the Exam record
+    //     $exam = Exam::find($id);
 
-            //sending response
-            if($question){
-                return response()->json([
-                    'status'=>true ,
-                    'message'=>"the Question has been saved successfully "
-                ]);
-            }else{
-                return response()->json([
-                    'status'=>false ,
-                    'message'=>"Invalid Informations "
-                ]);
-            }
-        } else {
-            // Return an error response if the limit is reached
-            return response()->json([
-                'status'=>false ,
-                'message'=>"You have reached the maximum number of questions for this exam."
-            ], 422); // Use 422 Unprocessable Entity status code
-        }
-    }
+    //     // Check if the number of existing questions is less than the allowed number
+    //     if ($exam->questions()->count() < $exam->questions_number) {
+    //         //object creating
+    //         $question = Question::create([
+    //             'question_text'=>$request->question_text,
+    //             'exam_id'=>$id,
+    //             'difficulty'=>$request->difficulty
+    //         ]);
+
+    //         //sending response
+    //         if($question){
+    //             return response()->json([
+    //                 'status'=>true ,
+    //                 'message'=>"تم اضافة السؤال بنجاح  "
+    //             ]);
+    //         }else{
+    //             return response()->json([
+    //                 'status'=>false ,
+    //                 'message'=>"معلومات خاطئة  "
+    //             ]);
+    //         }
+    //     } else {
+    //         // Return an error response if the limit is reached
+    //         return response()->json([
+    //             'status'=>false ,
+    //             'message'=>"لقد تجاوزت الحد المسموح به لاضافة الاسئلة "
+    //         ], 422); // Use 422 Unprocessable Entity status code
+    //     }
+    // }
 
     public function setQuestion(Request $request , $id ){
-
         //Validations
         $request->validate([
             // 'question_text'=>'required|unique:questions',
@@ -120,7 +120,7 @@ class QuestionsControlller extends Controller
 
 
     public function getQuestions($id){
-        
+
 
         $questions = Exam::find($id)->questions ;
 

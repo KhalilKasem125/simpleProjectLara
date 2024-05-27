@@ -28,7 +28,7 @@ class StudyingPlaneControlller extends Controller
 
         return response()->json([
             "status" => true,
-            "message" => "The photo has been saved successfully"
+            "message" => "تم اضافه الخطة بنجاح "
         ]);
     }
 
@@ -48,7 +48,7 @@ class StudyingPlaneControlller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Photos retrieved successfully',
+            'message' => 'تم استرجاع الخطة بنجاح ',
             'data' => $photoData,
         ]);
     }

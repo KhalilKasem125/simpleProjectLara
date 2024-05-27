@@ -52,6 +52,7 @@ class OptionsControlller extends Controller
     public function getOptions($id)
     {
 
+
         $options = Question::find($id)->options;
 
         if($options){

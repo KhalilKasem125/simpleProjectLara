@@ -50,6 +50,8 @@ class TeachersControlller extends Controller
     public function addTeacherfromSubject(Request $request , $id)
     {
 
+
+
         //Validations
         $request->validate([
             "first_name"=>"required|min:3",
@@ -84,11 +86,12 @@ class TeachersControlller extends Controller
     //Only Admins Can access on full Teachers Informations
     //Get
     public function showTeachersDetailsForAdmins($id){
+
         $teachers_info = Subject::find($id)->teachers;
 
         return response()->json([
             "status"=>true ,
-            "message"=>"Teachers Informations ",
+            "message"=>"معلومات المعلمين  ",
             "data"=>$teachers_info
         ]);
     }
@@ -97,6 +100,9 @@ class TeachersControlller extends Controller
     //Get
     public function showTeachersDetailsForStudents($id)
     {
+
+
+
 
         // $teachers_info = Teacher::select('first_name', 'last_name',
         // 'phone_no','teaching_duration' ,'subject_name')
@@ -125,7 +131,7 @@ class TeachersControlller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Photos retrieved successfully',
+            'message' => 'معلومات المعلمين ',
             'data' => $teachersData,
         ]);
     }
@@ -135,13 +141,15 @@ class TeachersControlller extends Controller
     public function deleteTeacher($id)
     {
 
+
+
         $teacher_deleted =Teacher::find($id);
 
 
         $teacher_deleted->delete();
         return response()->json([
             "status"=>true,
-            "message"=>"Teacher has been deleted Successfully "
+            "message"=>"تم اضافة المعلم بنجاح "
         ]);
 
     }

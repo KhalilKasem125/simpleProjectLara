@@ -39,14 +39,6 @@ class AdminsControlller extends Controller
     }
     public function SuperAdminRegister(Request $request){
 
-        //validation
-         $request->validate([
-            "first_name"=>"required|max:50|min:2",
-            "last_name"=>"required:max:50|min:2",
-            "password"=>"required|confirmed|max:20|min:8",
-            "email"=>"required|email|unique:admins",
-            "phone_no"=>"required|max:9",
-        ]);
         $existingSuperAdmin = Admin::where('role', 'super_admin')->first();
 
         if ($existingSuperAdmin) {
@@ -55,6 +47,16 @@ class AdminsControlller extends Controller
                 "message" => " عذرا , يوجد مشرف لهذا الموقع مسبقا"
             ],404);
         }
+
+        //validation
+         $request->validate([
+            "first_name"=>"required|max:50|min:2",
+            "last_name"=>"required:max:50|min:2",
+            "password"=>"required|confirmed|max:20|min:8",
+            "email"=>"required|email|unique:admins",
+            "phone_no"=>"required|max:9",
+        ]);
+
 
         //Admin Creation
         $admin =Admin::create([
@@ -143,16 +145,20 @@ class AdminsControlller extends Controller
 
     //Only the super admin can use this function to delete an admin
     //Delete - when super_admin want to delete admin should send admin's name and its id
-    public function AdminDelete( Request $request , $id ){
+    public function AdminDelete( $id ){
         $admin_deleted =Admin::find($id);
 
-        if($admin_deleted->first_name === $request->first_name ){
+        if($admin_deleted)
+        {
+
             $admin_deleted->delete();
             return response()->json([
                 "status"=>true,
                 "message"=>"تم حذف الادمن بنجاح "
             ]);
-        }else{
+        }
+        else
+        {
             return response()->json([
                 "status"=>false,
                 "message"=>"معومات خاطئه "
@@ -168,4 +174,5 @@ class AdminsControlller extends Controller
             "message"=>"تم تسجيل الخروج بنجاح "
         ]);
     }
+
 }

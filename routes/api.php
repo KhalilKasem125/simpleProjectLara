@@ -108,7 +108,7 @@ Route::group(["middleware"=>["auth:admin-api"]],function()
 Route::get('getExam/{id}',[ExamsControlller::class,'getExams']);
 Route::get('getQuestions/{id}',[QuestionsControlller::class,'getQuestions']);
 Route::get('getOptions/{id}',[OptionsControlller::class,'getOptions']);
-
+Route::get('getSub/{id}',[SubjectsControlller::class,'getOptions']);
 
 
 

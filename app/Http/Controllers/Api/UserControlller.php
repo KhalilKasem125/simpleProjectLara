@@ -34,12 +34,13 @@ class UserControlller extends Controller
         //sending response
         return response()->json([
             "status"=>1,
-            "message"=>"the user has been registered successfully"
+            "message"=>"تم تسجيلك بنجاح "
         ]);
     }
 
     //User Login -Post
     public function login(Request $request){
+
 
         //validation
         $request->validate([
@@ -51,12 +52,12 @@ class UserControlller extends Controller
         if(!$token =auth()->attempt(["email"=>$request->email,"password"=>$request->password])){
             return response()->json([
                 "status"=>0,
-                "message"=>"Invalid Credintials"
+                "message"=>"معلومات تسجيل خاطئة "
             ],400);
         }else{
             return response()->json([
                 "status"=>1,
-                "message"=>"Your Logged in Successfully",
+                "message"=>"تم تسجيل الدخول بنجاح ",
                 "access_token"=>$token
             ]);
         }
@@ -65,22 +66,24 @@ class UserControlller extends Controller
     //User Profile -GET
     public function profile(){
 
+
         $user_data = auth()->user();
 
         return response()->json([
             "status"=>1,
-            "message"=>"User Profile",
+            "message"=>"بروفايل المستخدم ",
             "data"=>$user_data
         ]);
     }
 
     //Refresh Token -GET
     public function refreshToken(){
+
         $new_token = auth()->refresh();
 
         return response()->json([
             "status"=>true,
-            "message"=>"New Access Toke Generated Successfully",
+            "message"=>"تم توليد توكين جديد بنجاح",
             "New_Token"=>$new_token
         ]);
 
@@ -88,11 +91,12 @@ class UserControlller extends Controller
 
     //User Logout -GET
     public function logout(){
+
         auth()->logout();
 
         return response()->json([
             "status"=>1,
-            "message"=>"User Logged Out Successfully"
+            "message"=>"تسجيل الخروج تم بنجاح "
         ]);
     }
 }
