@@ -102,8 +102,9 @@ Route::group(["middleware"=>["auth:admin-api"]],function()
         Route::delete('/subjects/exams/{examId}', [ExamsControlller::class,'deleteExam']);
         Route::delete('deleteOption/{option_id}',[OptionsControlller::class,'deleteOption']);
         Route::delete('deleteQuestion/{question_id}',[QuestionsControlller::class,'deleteَQuestion']);
-        Route::delete('deleteVideo/{video_id}',[VideoControlller::class,'deleteVideo']);
+        Route::delete('deleteVideo/{vid_id}',[VideoControlller::class,'deleteVideo']);
         Route::delete('deletePhoto/{photo_id}',[StudyingPlaneControlller::class,'deletePhoto']);
+        Route::get('getExamTemplate/{id}/admin',[ExamsControlller::class,'getExamTemplate']);
 
     });
 });

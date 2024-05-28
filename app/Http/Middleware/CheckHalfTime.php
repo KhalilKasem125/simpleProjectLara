@@ -28,7 +28,7 @@ class CheckHalfTime
 
         // Allow submission only after the midpoint
         if ($now->lt($midpoint) || $now->gt($exam->exam_day_end_point)) {
-            return response()->json(['message' => 'Exam submission is not allowed at this time.'], 403);
+            return response()->json(['message' => 'ليس مم المسموح الانهاء في هذا الوقت'], 403);
         }
 
         return $next($request);

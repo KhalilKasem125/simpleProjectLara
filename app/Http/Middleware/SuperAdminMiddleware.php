@@ -21,6 +21,6 @@ class SuperAdminMiddleware
         }
 
 
-        return response()->json(['message' => 'Unauthorized'], 403);
+        return response()->json(['message' => 'ليس لديك الصلاحية'], 403);
     }
 }

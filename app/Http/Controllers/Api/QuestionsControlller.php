@@ -120,6 +120,7 @@ class QuestionsControlller extends Controller
 
 
     public function getQuestions($id){
+        
 
 
         $questions = Exam::find($id)->questions ;
@@ -139,10 +140,11 @@ class QuestionsControlller extends Controller
     }
 
     public function deleteَQuestion($question_id){
+
         $question_deleted = Question::find($question_id);
 
-        if($question_id){
-            $question_id->delete();
+        if($question_deleted){
+            $question_deleted->delete();
 
             return response()->json([
                 'status'=>true,

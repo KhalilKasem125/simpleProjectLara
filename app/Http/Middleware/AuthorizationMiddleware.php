@@ -19,12 +19,12 @@ class AuthorizationMiddleware
          if (auth()->check() && auth()->user()->role === User::ROLE_ADMIN) {
             return $next($request);
         }
-        
+
         if (auth()->check() && auth()->user()->role === User::ROLE_SUPER_ADMIN) {
             return $next($request);
         }
 
 
-        return response()->json(['message' => 'Unauthorized'], 403);
+        return response()->json(['message' => 'ليس لديك الصلاحية'], 403);
     }
 }

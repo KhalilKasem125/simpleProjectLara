@@ -16,6 +16,7 @@ class ExamsControlller extends Controller
 
     public function setExam(Request $request , $id ){
 
+
         //Validations
         $request->validate([
             'qestions_number'=>'required|numeric',
@@ -41,7 +42,7 @@ class ExamsControlller extends Controller
         //sending response
         return response()->json([
             'status'=>true,
-            'message'=>'تم اضافة الكتاب بنجاح '
+            'message'=>'تم اضافة الامتحان بنجاح '
         ]);
 
     }
@@ -66,6 +67,7 @@ class ExamsControlller extends Controller
 
     public function getExamTemplate($id)
     {
+        
 
 
 
