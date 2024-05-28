@@ -174,11 +174,10 @@ class ExamsControlller extends Controller
         ]);
     }
 
-    public function deleteExam($subjectId, $examId)
+    public function deleteExam( $examId)
     {
         // Find the exam
-        $exam = Exam::where('subject_id', $subjectId)
-                    ->where('id', $examId)
+        $exam = Exam::where('id', $examId)
                     ->first();
 
         if (!$exam) {

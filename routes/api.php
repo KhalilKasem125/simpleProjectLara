@@ -99,7 +99,11 @@ Route::group(["middleware"=>["auth:admin-api"]],function()
         Route::get('getExamTemplateForWeb/{id}',[ExamsControlller::class,'getExamTemplateForWeb']);
         Route::delete('deleteBook/{id}',[BooksControlller::class,'deleteBook']);
         Route::delete('/pdfs/{id}', [FilesControlller::class,'deletePdf']);
-        Route::delete('/subjects/{subjectId}/exams/{examId}', [ExamsControlller::class,'deleteExam']);
+        Route::delete('/subjects/exams/{examId}', [ExamsControlller::class,'deleteExam']);
+        Route::delete('deleteOption/{option_id}',[OptionsControlller::class,'deleteOption']);
+        Route::delete('deleteQuestion/{question_id}',[QuestionsControlller::class,'deleteَQuestion']);
+        Route::delete('deleteVideo/{video_id}',[VideoControlller::class,'deleteVideo']);
+        Route::delete('deletePhoto/{photo_id}',[StudyingPlaneControlller::class,'deletePhoto']);
 
     });
 });

@@ -13,6 +13,7 @@ class BooksControlller extends Controller
     {
 
         $request->validate([
+
             'book_file' => 'required|file|max:10240|mimes:pdf,docx,xlsx', // Validate as a PDF file
             'book_name' => 'required',
             'pages_number' => 'required|numeric',
@@ -32,7 +33,7 @@ class BooksControlller extends Controller
 
         return response()->json([
             "status" => true,
-            "message" => "تمت اضافة الكتاب بنجاح"
+            "message" => "تم اضافة الكتاب بنجاح"
         ]);
     }
 
@@ -67,7 +68,7 @@ class BooksControlller extends Controller
         if (!$pdf) {
             return response()->json([
                 'status' => false,
-                'message' => 'PDF not found.'
+                'message' => 'الكتاب ليس موجود'
             ], 404);
         }
 

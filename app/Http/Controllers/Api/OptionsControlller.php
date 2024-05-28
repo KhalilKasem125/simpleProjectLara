@@ -69,5 +69,25 @@ class OptionsControlller extends Controller
         }
     }
 
+    public function deleteOption($option_id){
+        $option_deleted = Option::find($option_id);
+
+        if($option_deleted){
+            $option_deleted->delete();
+
+            return response()->json([
+                'status'=>true,
+                'message'=>'تم حذف الخيار بنجاح '
+            ]);
+        }else{
+            return response()->json([
+                'status'=>false,
+                'message'=>"هذا الخيار غير موجود "
+            ],404);
+        }
+
+    }
+
+
 
 }

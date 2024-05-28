@@ -54,4 +54,29 @@ class VideoControlller extends Controller
         ]);
     }
 
+    public function deleteVideo($vid_id)
+    {
+        // Find the PDF object
+        $vid = Video::find($vid_id);
+
+        if (!$vid) {
+            return response()->json([
+                'status' => false,
+                'message' => 'الفيديو ليس موجود'
+            ], 404);
+        }
+
+        // Delete the PDF file from storage
+        if (file_exists(public_path('uploads/' . $vid->video_file))) {
+            unlink(public_path('uploads/' . $vid->video_file));
+        }
+
+        // Delete the PDF record from the database
+        $vid->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'تم حذف الفيديو بنجاح '
+        ]);
+    }
 }

@@ -138,4 +138,23 @@ class QuestionsControlller extends Controller
         }
     }
 
+    public function deleteَQuestion($question_id){
+        $question_deleted = Question::find($question_id);
+
+        if($question_id){
+            $question_id->delete();
+
+            return response()->json([
+                'status'=>true,
+                'message'=>'تم حذف السؤال بنجاح '
+            ]);
+        }else{
+            return response()->json([
+                'status'=>false,
+                'message'=>"هذا السؤال غير موجود "
+            ],404);
+        }
+
+    }
+
 }

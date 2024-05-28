@@ -50,8 +50,6 @@ class TeachersControlller extends Controller
     public function addTeacherfromSubject(Request $request , $id)
     {
 
-
-
         //Validations
         $request->validate([
             "first_name"=>"required|min:3",
@@ -62,7 +60,17 @@ class TeachersControlller extends Controller
             "teaching_duration"=>"required",
            // "subject_name"=>"required"
         ]);
+        $existingTeacher = Teacher::where('subject_id', $id)
+                ->where('first_name', $request->first_name)
+                ->where('last_name', $request->last_name)
+                ->first();
 
+        if ($existingTeacher) {
+            return response()->json([
+                "status" => false,
+                "message" => "المعلم موجود بالفعل في هذه المادة",
+            ], 422); // HTTP status code 422 Unprocessable Entity
+        }
 
         //Saving Teacher Object
         $teacher = Teacher::create([
@@ -86,7 +94,6 @@ class TeachersControlller extends Controller
     //Only Admins Can access on full Teachers Informations
     //Get
     public function showTeachersDetailsForAdmins($id){
-
         $teachers_info = Subject::find($id)->teachers;
 
         return response()->json([
@@ -101,21 +108,6 @@ class TeachersControlller extends Controller
     public function showTeachersDetailsForStudents($id)
     {
 
-
-
-
-        // $teachers_info = Teacher::select('first_name', 'last_name',
-        // 'phone_no','teaching_duration' ,'subject_name')
-        //             ->get();
-        // $teacherInfo = Teacher::select('first_name', 'last_name', 'phone_no', 'teaching_duration', 'subject_name')
-        // ->where('id', $id) // Add the where clause to filter by ID
-        // ->get();
-
-        // return response()->json([
-        //     "status"=>1 ,
-        //     "message"=>"Teachers Informations",
-        //     "data"=>$teacherInfo
-        // ]);
         $teachers = Subject::find($id)->teachers;
 
         $teachersData = [];
@@ -140,18 +132,22 @@ class TeachersControlller extends Controller
     //Delete
     public function deleteTeacher($id)
     {
-
-
-
+        //fetch the object with the id
         $teacher_deleted =Teacher::find($id);
 
+        if($teacher_deleted){
+            $teacher_deleted->delete();
 
-        $teacher_deleted->delete();
-        return response()->json([
-            "status"=>true,
-            "message"=>"تم اضافة المعلم بنجاح "
-        ]);
-
+            return response()->json([
+                "status"=>true,
+                "message"=>"تم حذف المعلم بنجاح "
+            ]);
+        }else{
+            return response()->json([
+                "status"=>false,
+                "message"=>"المعلم غير موجود"
+            ],404);
+        }
     }
 
 }

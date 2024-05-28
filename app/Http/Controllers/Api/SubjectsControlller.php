@@ -22,6 +22,7 @@ class SubjectsControlller extends Controller
         ]);
         //sending response
         return response()->json([
+
             "status"=>true,
             "messge"=>"تم انشاء المادة بنجاح "
         ]);
@@ -29,7 +30,6 @@ class SubjectsControlller extends Controller
     //this subject only the admin can delete
     public function deleteSubject($id)
     {
-
         //object deleted
         $sub_deleted = Subject::find($id);
 
@@ -48,13 +48,21 @@ class SubjectsControlller extends Controller
     }
     //this is for the admins only can use this property
     public function getSubjects(){
+
         $subjects = Subject::get();
 
-        return response()->json([
-            "status"=>true,
-            "message"=>"كل المواد",
-            "Subjects"=>$subjects
-        ]);
+        if($subjects){
+            return response()->json([
+                "status"=>true,
+                "message"=>"كل المواد",
+                "Subjects"=>$subjects
+            ]);
+        }else{
+            return response()->json([
+                'status'=>false,
+                'message'=>"لا يوجد مواد بعد "
+            ]);
+        }
     }
     //this is for the admins only can use this property
     public function getSingleSubject($id){
@@ -77,6 +85,7 @@ class SubjectsControlller extends Controller
 
     public function getOptions($id)
     {
+        
         $subject = Subject::with(['videos', 'photos', 'files', 'books', 'teachers', 'exams'])->findOrFail($id);
 
         return response()->json([

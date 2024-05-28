@@ -28,12 +28,13 @@ class FilesControlller extends Controller
 
         return response()->json([
             "status" => true,
-            "message" => "The PDF has been saved successfully"
+            "message" => "تم اضافة الملف بنجاح "
         ]);
     }
 
     public function getPdf($id)
     {
+
         $pdfs = Subject::find($id)->files;
 
         $pdfData = [];
@@ -55,6 +56,7 @@ class FilesControlller extends Controller
 
     public function deletePdf($id)
     {
+        
         // Find the PDF object
         $pdf = File::find($id);
 

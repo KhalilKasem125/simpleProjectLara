@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class StudyingPlaneControlller extends Controller
 {
+
     public function insertPhoto(Request $request , $id)
     {
         $request->validate([
@@ -34,6 +35,7 @@ class StudyingPlaneControlller extends Controller
 
     public function getPhotos($id)
     {
+
         $photos = Subject::find($id)->photos;
 
         $photoData = [];
@@ -52,4 +54,31 @@ class StudyingPlaneControlller extends Controller
             'data' => $photoData,
         ]);
     }
+
+    public function deletePhoto($photo_id)
+    {
+        // Find the PDF object
+        $photo = Photo::find($photo_id);
+
+        if (!$photo) {
+            return response()->json([
+                'status' => false,
+                'message' => 'الخطة غير موجودة'
+            ], 404);
+        }
+
+        // Delete the PDF file from storage
+        if (file_exists(public_path('images/' . $photo->photo_file))) {
+            unlink(public_path('images/' . $photo->photo_file));
+        }
+
+        // Delete the PDF record from the database
+        $photo->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'تم حذف الخطة بنجاح'
+        ]);
+    }
+    
 }

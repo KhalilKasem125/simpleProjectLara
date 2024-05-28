@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Password;
 
 class AdminsControlller extends Controller
 {
+
     //Post - Admins only registration
     public function AdminRegister(Request $request){
+
         //validation
         $request->validate([
             "first_name"=>"required|max:50|min:2",
@@ -37,7 +39,9 @@ class AdminsControlller extends Controller
         ]);
 
     }
+
     public function SuperAdminRegister(Request $request){
+
 
         $existingSuperAdmin = Admin::where('role', 'super_admin')->first();
 
@@ -92,7 +96,7 @@ class AdminsControlller extends Controller
         }else{
             return response()->json([
                 "status"=>1,
-                "message"=>"Your Logged in Successfully",
+                "message"=>"قمت بالتسجيل بنجاح",
                 "access_token"=>$token
             ]);
         }
@@ -102,18 +106,26 @@ class AdminsControlller extends Controller
     //Get
     public function AdminsInformationsShowing()
     {
+
         $super_admin_id =Admin::where('role',"super_admin")->first()->id;
 
         //$admin = new Admin();
         $admins =Admin::where("id","!=",$super_admin_id)->get();
-        return response()->json([
-            "status"=>true,
-            "message"=>"معلومات الادمنز ",
-            "data"=>$admins
-        ]);
 
+        if($admins){
+            return response()->json([
+                "status"=>true,
+                "message"=>"معلومات الادمنز ",
+                "data"=>$admins
+            ]);
+        }else{
+            return response()->json([
+                "status"=>false,
+                "message"=>" لا يوجد مشرفين بعد"
+            ],404);
+        }
     }
-
+    
     //That if I want to refresh token
     //Get-
     public function refreshToken(){
@@ -146,22 +158,19 @@ class AdminsControlller extends Controller
     //Only the super admin can use this function to delete an admin
     //Delete - when super_admin want to delete admin should send admin's name and its id
     public function AdminDelete( $id ){
+
         $admin_deleted =Admin::find($id);
 
-        if($admin_deleted)
-        {
-
+        if($admin_deleted){
             $admin_deleted->delete();
             return response()->json([
                 "status"=>true,
                 "message"=>"تم حذف الادمن بنجاح "
             ]);
-        }
-        else
-        {
+        }else{
             return response()->json([
                 "status"=>false,
-                "message"=>"معومات خاطئه "
+                "message"=>" الادمن غير موجود"
             ],404);
         }
     }

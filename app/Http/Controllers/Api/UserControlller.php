@@ -40,8 +40,6 @@ class UserControlller extends Controller
 
     //User Login -Post
     public function login(Request $request){
-
-
         //validation
         $request->validate([
             "email"=>"required|email",
@@ -65,7 +63,6 @@ class UserControlller extends Controller
 
     //User Profile -GET
     public function profile(){
-
 
         $user_data = auth()->user();
 
