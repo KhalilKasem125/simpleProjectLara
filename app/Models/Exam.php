@@ -14,7 +14,6 @@ class Exam extends Model
         'qestions_number',
         'success_degree',
         'Exam_Name',
-        'Exam_Type',
         'exam_day_start_point',
         'exam_day_end_point'
     ] ;

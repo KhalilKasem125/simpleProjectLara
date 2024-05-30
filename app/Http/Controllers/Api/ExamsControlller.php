@@ -13,16 +13,15 @@ use Illuminate\Http\Request;
 
 class ExamsControlller extends Controller
 {
+    
 
     public function setExam(Request $request , $id ){
-
 
         //Validations
         $request->validate([
             'qestions_number'=>'required|numeric',
             'success_degree'=>'required|numeric',
             'Exam_Name'=>'required',
-            'Exam_Type'=>'required',
             'exam_day_start_point' => 'required|date',
             'exam_day_end_point' => 'required|date|after:exam_day_start_point',
         ]);
@@ -35,7 +34,7 @@ class ExamsControlller extends Controller
             'exam_day_end_point' => Carbon::parse($request->input('exam_day_end_point')),
             'success_degree'=>$request->success_degree,
             'Exam_Name'=>$request->Exam_Name,
-            'Exam_Type'=>$request->Exam_Type,
+
 
         ]);
 
@@ -67,10 +66,6 @@ class ExamsControlller extends Controller
 
     public function getExamTemplate($id)
     {
-        
-
-
-
         $exam = Exam::with('questions.options')->find($id);
 
         if (!$exam) {
@@ -80,12 +75,9 @@ class ExamsControlller extends Controller
             ], 404); // Use a 404 Not Found status code if the exam doesn't exist
         }
 
-        // return response()->json([
-        //     'status' => true,
-        //     'exam' => $exam
-        // ]);
         return new ExamResource($exam);
     }
+
     public function getExamTemplateForWeb($id)
     {
 

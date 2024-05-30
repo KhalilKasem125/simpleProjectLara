@@ -54,7 +54,8 @@ Route::group(["middleware"=>["auth:api"]],function(){
     Route::get('retrivePdf/user/{id}',[FilesControlller::class,'getPdf']);
     Route::get("getVideos/user/{id}",[VideoControlller::class,'getVideos']);
     Route::get('getExamTemplate/{id}',[ExamsControlller::class,'getExamTemplate'])->middleware('time_limited_access');
-    Route::post('Submit/user/{id}',[ExamsControlller::class,'submitExam'])->middleware(['time_limited_access','check_half_time']);
+    Route::post('Submit/user/{id}',[ExamsControlller::class,'submitExam'])->middleware(['time_limited_access']);
+    // Route::post('Submit/user/{id}',[ExamsControlller::class,'submitExam'])->middleware(['time_limited_access','check_half_time']);
 
 });
 
@@ -89,7 +90,7 @@ Route::group(["middleware"=>["auth:admin-api"]],function()
         Route::get("getBooks/admin/{id}",[BooksControlller::class,'getBooks']);
         Route::post('insertAPlne/{id}',[StudyingPlaneControlller::class,'insertPhoto']);
         Route::get('retriveTHEPlanes/admin/{id}',[StudyingPlaneControlller::class,'getPhotos']);
-        // Route::post("addTeacher",[TeachersControlller::class,"addTeacher"]);
+        Route::get("showingAllTeachers",[TeachersControlller::class,"showingAllTeachers"]);
         Route::delete("deleteTeacher/admin/{id}",[TeachersControlller::class,"deleteTeacher"]);
         Route::post("addTeacher/admin/{id}",[TeachersControlller::class,"addTeacherfromSubject"]);
         Route::get("show-teachers-info/admin/{id}",[TeachersControlller::class,"showTeachersDetailsForAdmins"]);

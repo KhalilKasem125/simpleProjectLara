@@ -16,7 +16,8 @@ return new class extends Migration
             $table->text('question_text');
             $table->foreignId('exam_id')->constrained('exams')->onDelete('cascade');
             //$table->integer('exam_id')->unsigned(); // You might want to change this to an enum or foreign key later
-            $table->enum('difficulty',['easy','medium','hard'])->nullable(); // Optional: easy, medium, hard
+
+            $table->integer('question_deg');
             $table->timestamps();
         });
     }

@@ -28,11 +28,11 @@ class TimeLimitedAccess
            $now = Carbon::now('Asia/Damascus');
 
            if ($now->lt($examStartTime)) {
-               return response()->json(['message' => 'Exam has not started yet.'], 403);
+               return response()->json(['message' => 'وقت الامتحان لم يبدا بعد'], 403);
            }
 
            if ($now->gt($examEndTime)) {
-               return response()->json(['message' => 'Exam time is over.'], 403);
+               return response()->json(['message' => 'وقت الامتحان قد انتهى '], 403);
            }
 
            return $next($request);

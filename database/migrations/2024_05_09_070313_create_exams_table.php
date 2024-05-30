@@ -16,11 +16,10 @@ return new class extends Migration
            // $table->integer('subject_id')->unsigned();
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->string("Exam_Name");
-            $table->enum("Exam_Type",["Quiz" , "Exam"]);
             $table->integer('qestions_number');
             $table->integer('success_degree');
-            $table->dateTime('exam_day_start_point');
-            $table->dateTime('exam_day_end_point');
+            $table->date('exam_day_start_point');
+            $table->date('exam_day_end_point');
             $table->timestamps();
         });
     }

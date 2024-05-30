@@ -150,4 +150,24 @@ class TeachersControlller extends Controller
         }
     }
 
+    
+    public function showingAllTeachers(){
+
+        $teachers = Teacher::get();
+        if($teachers){
+            return response()->json([
+                'status'=>true,
+                'message'=>'معلومات المعلمين',
+                'data'=>$teachers
+            ]);
+        }else{
+            return response()->json([
+                'status'=>false,
+                'message'=>'لا يوجد معلمين '
+
+            ]);
+        }
+
+    }
+
 }

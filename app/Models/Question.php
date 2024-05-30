@@ -11,7 +11,7 @@ class Question extends Model
     protected $fillable = [
         'exam_id',
         'question_text',
-        'difficulty'
+        'question_deg'
     ];
 
     public function options(){

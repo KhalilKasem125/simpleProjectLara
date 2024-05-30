@@ -83,6 +83,7 @@ class QuestionsControlller extends Controller
         $request->validate([
             // 'question_text'=>'required|unique:questions',
             'question_text' => 'required|unique:questions,question_text,NULL,id,exam_id,' . $id,
+            'question_deg'=>'required|numeric'
         ]);
 
         // Get the Exam record
@@ -94,7 +95,7 @@ class QuestionsControlller extends Controller
             $question = Question::create([
                 'question_text'=>$request->question_text,
                 'exam_id'=>$id,
-                'difficulty'=>$request->difficulty
+                'question_deg'=>$request->question_deg
             ]);
 
             //sending response
@@ -120,8 +121,6 @@ class QuestionsControlller extends Controller
 
 
     public function getQuestions($id){
-        
-
 
         $questions = Exam::find($id)->questions ;
 
