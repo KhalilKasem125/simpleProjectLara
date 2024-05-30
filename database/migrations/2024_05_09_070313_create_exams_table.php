@@ -16,6 +16,7 @@ return new class extends Migration
            // $table->integer('subject_id')->unsigned();
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->string("Exam_Name");
+            $table->integer('exam_time');
             $table->integer('qestions_number');
             $table->integer('success_degree');
             $table->date('exam_day_start_point');

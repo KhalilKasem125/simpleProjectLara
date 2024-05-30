@@ -53,9 +53,14 @@ Route::group(["middleware"=>["auth:api"]],function(){
     Route::get('retriveTHEPlanes/user/{id}',[StudyingPlaneControlller::class,'getPhotos']);
     Route::get('retrivePdf/user/{id}',[FilesControlller::class,'getPdf']);
     Route::get("getVideos/user/{id}",[VideoControlller::class,'getVideos']);
+    Route::get("getExams/user/{id}",[ExamsControlller::class,'getExams']);
     Route::get('getExamTemplate/{id}',[ExamsControlller::class,'getExamTemplate'])->middleware('time_limited_access');
     Route::post('Submit/user/{id}',[ExamsControlller::class,'submitExam'])->middleware(['time_limited_access']);
     // Route::post('Submit/user/{id}',[ExamsControlller::class,'submitExam'])->middleware(['time_limited_access','check_half_time']);
+    Route::get('getSub/user/{id}',[SubjectsControlller::class,'getOptions']);
+    Route::get('getQuestions/user/{id}',[QuestionsControlller::class,'getQuestions']);
+    Route::get('getOptions/user/{id}',[OptionsControlller::class,'getOptions']);
+    Route::get("getSubjects/user",[SubjectsControlller::class,"getSubjects"]);
 
 });
 
@@ -106,15 +111,16 @@ Route::group(["middleware"=>["auth:admin-api"]],function()
         Route::delete('deleteVideo/{vid_id}',[VideoControlller::class,'deleteVideo']);
         Route::delete('deletePhoto/{photo_id}',[StudyingPlaneControlller::class,'deletePhoto']);
         Route::get('getExamTemplate/{id}/admin',[ExamsControlller::class,'getExamTemplate']);
+        Route::get('getSub/admin/{id}',[SubjectsControlller::class,'getOptions']);
+        Route::get('getQuestions/admin/{id}',[QuestionsControlller::class,'getQuestions']);
+        Route::get('getOptions/admin/{id}',[OptionsControlller::class,'getOptions']);
 
     });
 });
 
 
 Route::get('getExam/{id}',[ExamsControlller::class,'getExams']);
-Route::get('getQuestions/{id}',[QuestionsControlller::class,'getQuestions']);
-Route::get('getOptions/{id}',[OptionsControlller::class,'getOptions']);
-Route::get('getSub/{id}',[SubjectsControlller::class,'getOptions']);
+
 
 
 

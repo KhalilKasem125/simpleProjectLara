@@ -13,12 +13,12 @@ use Illuminate\Http\Request;
 
 class ExamsControlller extends Controller
 {
-    
-
     public function setExam(Request $request , $id ){
+
 
         //Validations
         $request->validate([
+            'exam_time'=>"required|numeric",
             'qestions_number'=>'required|numeric',
             'success_degree'=>'required|numeric',
             'Exam_Name'=>'required',
@@ -28,13 +28,14 @@ class ExamsControlller extends Controller
 
         //object saving
         $exam = Exam::create([
+
             'subject_id'=>$id ,
             'qestions_number'=>$request->qestions_number,
             'exam_day_start_point' => Carbon::parse($request->input('exam_day_start_point')),
             'exam_day_end_point' => Carbon::parse($request->input('exam_day_end_point')),
             'success_degree'=>$request->success_degree,
             'Exam_Name'=>$request->Exam_Name,
-
+            'exam_time'=>$request->exam_time
 
         ]);
 
@@ -47,6 +48,8 @@ class ExamsControlller extends Controller
     }
 
     public function getExams($id){
+
+
         $exam = Subject::find($id)->exams ;
 
         //cheching if the subject has exams or not
@@ -66,6 +69,8 @@ class ExamsControlller extends Controller
 
     public function getExamTemplate($id)
     {
+
+
         $exam = Exam::with('questions.options')->find($id);
 
         if (!$exam) {
@@ -99,6 +104,7 @@ class ExamsControlller extends Controller
 
     public function submitExam(Request $request, $examId)
     {
+
 
 
         $user_id = auth()->user()->id;

@@ -15,7 +15,8 @@ class Exam extends Model
         'success_degree',
         'Exam_Name',
         'exam_day_start_point',
-        'exam_day_end_point'
+        'exam_day_end_point',
+        'exam_time'
     ] ;
     protected $dates = [
         'exam_day_start_point',
