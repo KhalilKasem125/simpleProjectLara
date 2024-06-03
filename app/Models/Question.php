@@ -11,7 +11,9 @@ class Question extends Model
     protected $fillable = [
         'exam_id',
         'question_text',
-        'question_deg'
+        'question_deg',
+        'created_by',
+        'updated_by'
     ];
 
     public function options(){

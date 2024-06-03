@@ -11,7 +11,9 @@ class File extends Model
     protected $fillable = [
         'file_name',
         'file',
-        'subject_id'
+        'subject_id',
+        'created_by',
+        'updated_by'
     ];
     use HasFactory;
     public function subject(){

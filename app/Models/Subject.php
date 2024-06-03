@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
 {
-    
+
     protected $table = "subjects";
 
     protected $fillable =[
         "subject_name",
+        'created_by',
+        'updated_by'
     ];
     use HasFactory;
 

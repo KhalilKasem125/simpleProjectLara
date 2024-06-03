@@ -6,15 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class VideoControlller extends Controller
 {
     //Post - Admins Only
     public function insertVideo(Request $request , $id){
+        if (!$user = JWTAuth::parseToken()->authenticate()) {
+            return response()->json([
+                "status" => false,
+                "message" => "ليس لديك الصلاحية للدخول"
+            ], 401);
+        }
+
         $request->validate([
             'video_file'=>'required|file|mimetypes:video/mp4,video/quicktime|max:30000',
             'video_name'=>'required',
         ]);
+
         $video_file =  time() . '.' . $request->video_file->extension();
         $request->video_file->move(public_path('uploads'), $video_file);
 
@@ -22,6 +31,7 @@ class VideoControlller extends Controller
         $video->video_name = $request->video_name;
         $video->video_file = $video_file;
         $video->subject_id = $id ;
+        $video->created_by = $user->id ;
         $video->save();
 
         return response()->json([
@@ -79,4 +89,5 @@ class VideoControlller extends Controller
             'message' => 'تم حذف الفيديو بنجاح '
         ]);
     }
+
 }

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string("subject_name");
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned()->nullable();
             // $table->integer("success_degree");
             // $table->text("description");
             // $table->integer("books_number");

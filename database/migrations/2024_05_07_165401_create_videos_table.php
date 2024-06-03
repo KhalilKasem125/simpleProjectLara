@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string("video_file");
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
            // $table->integer('subject_id')->unsigned();
+           $table->integer('created_by')->unsigned();
+           $table->integer('updated_by')->unsigned()->nullable();
             $table->timestamps();
         });
     }

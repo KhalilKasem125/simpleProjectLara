@@ -16,7 +16,9 @@ class Exam extends Model
         'Exam_Name',
         'exam_day_start_point',
         'exam_day_end_point',
-        'exam_time'
+        'exam_time',
+        'created_by',
+        'updated_by'
     ] ;
     protected $dates = [
         'exam_day_start_point',

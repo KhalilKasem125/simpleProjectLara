@@ -13,7 +13,9 @@ class Book extends Model
         'book_file',
         'pages_number',
         'description',
-        'subject_id'
+        'subject_id',
+        'created_by',
+        'updated_by'
     ];
     use HasFactory;
     public function subject(){

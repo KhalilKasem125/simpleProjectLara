@@ -11,10 +11,12 @@ class Photo extends Model
     protected $fillable = [
         'photo_name',
         'photo_file',
-        'subject_id'
+        'subject_id',
+        'created_by',
+        'updated_by'
     ];
     use HasFactory;
-    
+
     public function subject(){
         return $this->belongsTo(Subject::class);
     }

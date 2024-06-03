@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('question_id')->constrained('questions')->onDelete('cascade');
             $table->text('option_text');
             $table->boolean('is_correct');
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned()->nullable();
             $table->timestamps();
         });
     }

@@ -6,11 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\File;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class FilesControlller extends Controller
 {
     public function storePdf(Request $request  , $id)
     {
+        if (!$user = JWTAuth::parseToken()->authenticate()) {
+            return response()->json([
+                "status" => false,
+                "message" => "ليس لديك الصلاحية للدخول"
+            ], 401);
+        }
 
         $request->validate([
             'file' => 'required|file|max:10240|mimes:pdf,docx,xlsx', // Validate as a PDF file
@@ -24,6 +31,7 @@ class FilesControlller extends Controller
         $file->file_name = $request->file_name;
         $file->file = $pdf_file;
         $file->subject_id = $id ;
+        $file->created_by = $user->id ;
         $file->save();
 
         return response()->json([
@@ -56,7 +64,7 @@ class FilesControlller extends Controller
 
     public function deletePdf($id)
     {
-        
+
         // Find the PDF object
         $pdf = File::find($id);
 

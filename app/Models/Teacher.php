@@ -16,7 +16,9 @@ class Teacher extends Model
         "teaching_duration",
         "date_of_birth",
         "subject_name",
-        'subject_id'
+        'subject_id',
+        'created_by',
+        'updated_by'
     ];
     use HasFactory;
     public function subject(){

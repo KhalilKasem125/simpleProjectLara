@@ -18,7 +18,8 @@ return new class extends Migration
             $table->integer('pages_number');
             $table->text('description');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
-
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned()->nullable();
            // $table->integer('subject_id')->unsigned();
             $table->timestamps();
         });

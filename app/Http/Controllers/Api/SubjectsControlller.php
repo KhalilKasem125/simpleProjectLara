@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SubjectsControlller extends Controller
 {
@@ -16,9 +17,16 @@ class SubjectsControlller extends Controller
         $request->validate([
             "subject_name"=>"required"
         ]);
+        if (!$user = JWTAuth::parseToken()->authenticate()) {
+            return response()->json([
+                "status" => false,
+                "message" => "ليس لديك الصلاحية للدخول"
+            ], 401);
+        }
         //Subject Creation
         $subject = Subject::create([
-            "subject_name"=>$request->subject_name
+            "subject_name"=>$request->subject_name,
+            'created_by'=>$user->id
         ]);
         //sending response
         return response()->json([
@@ -85,7 +93,7 @@ class SubjectsControlller extends Controller
 
     public function getOptions($id)
     {
-        
+
         $subject = Subject::with(['videos', 'photos', 'files', 'books', 'teachers', 'exams'])->findOrFail($id);
 
         return response()->json([

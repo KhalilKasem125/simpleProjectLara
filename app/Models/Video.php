@@ -11,7 +11,9 @@ class Video extends Model
     protected $fillable =[
         'video_file',
         'video_name',
-        'subject_id'
+        'subject_id',
+        'created_by',
+        'updated_by'
     ];
     use HasFactory;
     public function subject(){

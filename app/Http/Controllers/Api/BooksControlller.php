@@ -29,6 +29,7 @@ class BooksControlller extends Controller
         $file->pages_number = $request->pages_number;
         $file->description = $request->description;
         $file->subject_id = $id ;
+        $file->created_by = auth()->id;
         $file->save();
 
         return response()->json([

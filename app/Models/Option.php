@@ -11,7 +11,9 @@ class Option extends Model
     protected $fillable = [
         'question_id',
         'option_text',
-        'is_correct'
+        'is_correct',
+        'created_by',
+        'updated_by'
     ];
 
     use HasFactory;

@@ -10,12 +10,18 @@ use App\Models\Option;
 use App\Models\Subject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ExamsControlller extends Controller
 {
     public function setExam(Request $request , $id ){
 
-
+        if (!$user = JWTAuth::parseToken()->authenticate()) {
+            return response()->json([
+                "status" => false,
+                "message" => "ليس لديك الصلاحية للدخول"
+            ], 401);
+        }
         //Validations
         $request->validate([
             'exam_time'=>"required|numeric",
@@ -24,6 +30,7 @@ class ExamsControlller extends Controller
             'Exam_Name'=>'required',
             'exam_day_start_point' => 'required|date',
             'exam_day_end_point' => 'required|date|after:exam_day_start_point',
+            
         ]);
 
         //object saving
@@ -35,7 +42,8 @@ class ExamsControlller extends Controller
             'exam_day_end_point' => Carbon::parse($request->input('exam_day_end_point')),
             'success_degree'=>$request->success_degree,
             'Exam_Name'=>$request->Exam_Name,
-            'exam_time'=>$request->exam_time
+            'exam_time'=>$request->exam_time,
+            'created_by' => $user->id
 
         ]);
 

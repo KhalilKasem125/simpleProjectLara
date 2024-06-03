@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Mockery\Matcher\Subset;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class TeachersControlller extends Controller
 {
@@ -60,6 +61,12 @@ class TeachersControlller extends Controller
             "teaching_duration"=>"required",
            // "subject_name"=>"required"
         ]);
+        if (!$user = JWTAuth::parseToken()->authenticate()) {
+            return response()->json([
+                "status" => false,
+                "message" => "ليس لديك الصلاحية للدخول"
+            ], 401);
+        }
         $existingTeacher = Teacher::where('subject_id', $id)
                 ->where('first_name', $request->first_name)
                 ->where('last_name', $request->last_name)
@@ -81,7 +88,8 @@ class TeachersControlller extends Controller
             "subject_name"=>Subject::find($id)->subject_name,
             "date_of_birth"=>$request->date_of_birth,
             "teaching_duration"=>$request->teaching_duration,
-            "subject_id"=>$id
+            "subject_id"=>$id,
+            'created_by'=>$user->id
         ]);
 
         //sending response
@@ -150,7 +158,7 @@ class TeachersControlller extends Controller
         }
     }
 
-    
+
     public function showingAllTeachers(){
 
         $teachers = Teacher::get();

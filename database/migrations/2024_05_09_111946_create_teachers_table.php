@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string("phone_no",9);
             $table->text("description")->nullable();
             $table->integer("teaching_duration");
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned()->nullable();
             $table->timestamps();
         });
     }

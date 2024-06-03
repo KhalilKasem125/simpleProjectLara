@@ -7,6 +7,7 @@ use App\Models\Exam;
 use App\Models\Option;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class QuestionsControlller extends Controller
 {
@@ -80,17 +81,15 @@ class QuestionsControlller extends Controller
     // }
 
     public function setQuestion(Request $request , $id ){
-        //Validations
-        // $rules = [
-        //     'is_correct' => 'in:true,false',
-        // ];
-        // $request->validate([
-        //     // 'question_text'=>'required|unique:questions',
-        //     'question_text' => 'required|unique:questions,question_text,NULL,id,exam_id,' . $id,
-        //     'question_deg'=>'required|numeric',
-        //     'option_text'=>'required|max:50',
-        //     $rules
-        // ]);
+
+        if (!$user = JWTAuth::parseToken()->authenticate()) {
+            return response()->json([
+                "status" => false,
+                "message" => "ليس لديك الصلاحية للدخول"
+            ], 401);
+        }
+
+        
         $rules = [
             'options.*.option_text' => 'required|max:50', // Validate each option_text
             'options.*.is_correct' => 'in:true,false', // Validate each is_correct
@@ -103,31 +102,25 @@ class QuestionsControlller extends Controller
             $rules
         ]);
 
+
+
         // Get the Exam record
         $exam = Exam::find($id);
 
-        // Check if the number of existing questions for this exam is less than the allowed number
-        // if ($exam->questions()->where('exam_id', $id)->count() < $exam->qestions_number) {
-        //     //object creating
-        //     $question = Question::create([
-        //         'question_text'=>$request->question_text,
-        //         'exam_id'=>$id,
-        //         'question_deg'=>$request->question_deg
-        //     ]);
-        //     for($i=1 ; $i>=4 ; $i++){
-        //         $option = Option::create([
-        //             'option_text'=>$request->option_text,
-        //             'question_id'=>$question->id,
-        //             'is_correct'=>$request->is_correct
-        //         ]);
-        //     }
         if ($exam->questions()->where('exam_id', $id)->count() < $exam->qestions_number) {
             // Create the question
-            $question = Question::create([
-                'question_text' => $request->question_text,
-                'exam_id' => $id,
-                'question_deg' => $request->question_deg
-            ]);
+            $question = new Question();
+                $question->question_text = $request->question_text ;
+                $question->exam_id = $id ;
+                $question->question_deg = $request->question_deg ;
+                $question->created_by = $user->id ;
+
+            // $question = Question::create([
+            //     'question_text' => $request->question_text,
+            //     'exam_id' => $id,
+            //     'question_deg' => $request->question_deg,
+            //     'created_by'=>$user->id
+            // ]);
 
             $existingOptionTexts = [];
             foreach ($request->options as $optionData) {
@@ -139,12 +132,16 @@ class QuestionsControlller extends Controller
                 }
                 $existingOptionTexts[] = $optionData['option_text'];
             }
+            //saving after checking
+            $question->save();
+
             // Loop through each option and create them
             foreach ($request->options as $optionData) {
                 Option::create([
                     'option_text' => $optionData['option_text'],
                     'question_id' => $question->id,
-                    'is_correct' => $optionData['is_correct']
+                    'is_correct' => $optionData['is_correct'],
+                    'created_by'=>$user->id
                 ]);
             }
             //sending response
@@ -206,6 +203,6 @@ class QuestionsControlller extends Controller
 
     }
 
-    
+
 
 }

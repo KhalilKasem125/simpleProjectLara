@@ -21,6 +21,8 @@ return new class extends Migration
             $table->integer('success_degree');
             $table->date('exam_day_start_point');
             $table->date('exam_day_end_point');
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned()->nullable();
             $table->timestamps();
         });
     }
