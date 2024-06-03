@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
+use App\Models\Option;
 use App\Models\Question;
 use Illuminate\Http\Request;
 
@@ -80,24 +81,72 @@ class QuestionsControlller extends Controller
 
     public function setQuestion(Request $request , $id ){
         //Validations
+        // $rules = [
+        //     'is_correct' => 'in:true,false',
+        // ];
+        // $request->validate([
+        //     // 'question_text'=>'required|unique:questions',
+        //     'question_text' => 'required|unique:questions,question_text,NULL,id,exam_id,' . $id,
+        //     'question_deg'=>'required|numeric',
+        //     'option_text'=>'required|max:50',
+        //     $rules
+        // ]);
+        $rules = [
+            'options.*.option_text' => 'required|max:50', // Validate each option_text
+            'options.*.is_correct' => 'in:true,false', // Validate each is_correct
+        ];
+
         $request->validate([
-            // 'question_text'=>'required|unique:questions',
             'question_text' => 'required|unique:questions,question_text,NULL,id,exam_id,' . $id,
-            'question_deg'=>'required|numeric'
+            'question_deg' => 'required|numeric',
+            'options' => 'required|array',
+            $rules
         ]);
 
         // Get the Exam record
         $exam = Exam::find($id);
 
         // Check if the number of existing questions for this exam is less than the allowed number
+        // if ($exam->questions()->where('exam_id', $id)->count() < $exam->qestions_number) {
+        //     //object creating
+        //     $question = Question::create([
+        //         'question_text'=>$request->question_text,
+        //         'exam_id'=>$id,
+        //         'question_deg'=>$request->question_deg
+        //     ]);
+        //     for($i=1 ; $i>=4 ; $i++){
+        //         $option = Option::create([
+        //             'option_text'=>$request->option_text,
+        //             'question_id'=>$question->id,
+        //             'is_correct'=>$request->is_correct
+        //         ]);
+        //     }
         if ($exam->questions()->where('exam_id', $id)->count() < $exam->qestions_number) {
-            //object creating
+            // Create the question
             $question = Question::create([
-                'question_text'=>$request->question_text,
-                'exam_id'=>$id,
-                'question_deg'=>$request->question_deg
+                'question_text' => $request->question_text,
+                'exam_id' => $id,
+                'question_deg' => $request->question_deg
             ]);
 
+            $existingOptionTexts = [];
+            foreach ($request->options as $optionData) {
+                if (in_array($optionData['option_text'], $existingOptionTexts)) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'يوجد خيار مشابه . جميع الخيارات يجب ان تكون فريدة'
+                    ], 422);
+                }
+                $existingOptionTexts[] = $optionData['option_text'];
+            }
+            // Loop through each option and create them
+            foreach ($request->options as $optionData) {
+                Option::create([
+                    'option_text' => $optionData['option_text'],
+                    'question_id' => $question->id,
+                    'is_correct' => $optionData['is_correct']
+                ]);
+            }
             //sending response
             if($question){
                 return response()->json([
@@ -118,7 +167,6 @@ class QuestionsControlller extends Controller
             ], 422); // Use 422 Unprocessable Entity status code
         }
     }
-
 
     public function getQuestions($id){
 
@@ -157,5 +205,7 @@ class QuestionsControlller extends Controller
         }
 
     }
+
+    
 
 }
