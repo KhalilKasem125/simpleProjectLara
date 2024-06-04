@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Photo;
 use App\Models\Subject;
 use Illuminate\Http\Request;
@@ -40,6 +41,7 @@ class StudyingPlaneControlller extends Controller
             "status" => true,
             "message" => "تم اضافه الخطة بنجاح "
         ]);
+
     }
 
     public function getPhotos($id)
@@ -66,28 +68,41 @@ class StudyingPlaneControlller extends Controller
 
     public function deletePhoto($photo_id)
     {
-        // Find the PDF object
-        $photo = Photo::find($photo_id);
+        $admin_id = auth()->user()->id ;
+        $admin = Admin::find($admin_id);
+        // $find = Admin::where('role','super_admin');
+        // ->Subject::where('created_by',$admin_id)->first();
+        $sup = Photo::find($photo_id);
 
-        if (!$photo) {
+        if($admin->role == 'super_admin' ||$sup->created_by == $admin_id ){
+            // Find the PDF object
+            $photo = Photo::find($photo_id);
+
+            if (!$photo) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'الخطة غير موجودة'
+                ], 404);
+            }
+
+            // Delete the PDF file from storage
+            if (file_exists(public_path('images/' . $photo->photo_file))) {
+                unlink(public_path('images/' . $photo->photo_file));
+            }
+
+            // Delete the PDF record from the database
+            $photo->delete();
+
             return response()->json([
-                'status' => false,
-                'message' => 'الخطة غير موجودة'
-            ], 404);
+                'status' => true,
+                'message' => 'تم حذف الخطة بنجاح'
+            ]);
+        }else{
+            return response()->json([
+                'status' => true,
+                'message' => 'ليس لديك الصلاحية للقيام بذلك '
+            ],402);
         }
-
-        // Delete the PDF file from storage
-        if (file_exists(public_path('images/' . $photo->photo_file))) {
-            unlink(public_path('images/' . $photo->photo_file));
-        }
-
-        // Delete the PDF record from the database
-        $photo->delete();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'تم حذف الخطة بنجاح'
-        ]);
     }
 
 }

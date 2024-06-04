@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Subject;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -66,28 +67,41 @@ class VideoControlller extends Controller
 
     public function deleteVideo($vid_id)
     {
+        $admin_id = auth()->user()->id ;
+        $admin = Admin::find($admin_id);
+        // $find = Admin::where('role','super_admin');
+        // ->Subject::where('created_by',$admin_id)->first();
+        $VI = Video::find($vid_id);
+
+        if($admin->role == 'super_admin' ||$VI->created_by == $admin_id ){
         // Find the PDF object
-        $vid = Video::find($vid_id);
+            $vid = Video::find($vid_id);
 
-        if (!$vid) {
+            if (!$vid) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'الفيديو ليس موجود'
+                ], 404);
+            }
+
+            // Delete the PDF file from storage
+            if (file_exists(public_path('uploads/' . $vid->video_file))) {
+                unlink(public_path('uploads/' . $vid->video_file));
+            }
+
+            // Delete the PDF record from the database
+            $vid->delete();
+
             return response()->json([
-                'status' => false,
-                'message' => 'الفيديو ليس موجود'
-            ], 404);
+                'status' => true,
+                'message' => 'تم حذف الفيديو بنجاح '
+            ]);
+        }else{
+            return response()->json([
+                'status' => true,
+                'message' => 'ليس لديك الصلاحية للقيام بذلك '
+            ],402);
         }
-
-        // Delete the PDF file from storage
-        if (file_exists(public_path('uploads/' . $vid->video_file))) {
-            unlink(public_path('uploads/' . $vid->video_file));
-        }
-
-        // Delete the PDF record from the database
-        $vid->delete();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'تم حذف الفيديو بنجاح '
-        ]);
     }
 
 }

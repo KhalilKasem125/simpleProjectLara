@@ -5,13 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserControlller extends Controller
 {
 
+
     //User Registration -Post
     public function register(Request $request){
 
+        //password
+        //password_confirmation
+        //
         //validation
         $request->validate([
             "first_name"=>"required",
@@ -36,6 +41,45 @@ class UserControlller extends Controller
             "status"=>1,
             "message"=>"تم تسجيلك بنجاح "
         ]);
+    }
+
+    //this func enable user to update all his informations
+    //Put
+    public function updateUserInformations(Request $request , $id){
+
+
+        $request->validate([
+            'password'=>"required|confirmed"
+        ]);
+
+        if(User::where("id",$id)->exists()){
+            $user = User::find($id);
+            if (!Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    "status" => false,
+                    "message" => "لا يوجد تطابق"
+                ], 401);
+            }
+            $user->first_name = !empty($request->first_name) ? $request->first_name : $user->first_name ;
+                $user->last_name = !empty($request->last_name) ? $request->last_name : $user->last_name ;
+                $user->email = !empty($request->email) ? $request->email : $user->email ;
+                $user->phone_no = !empty($request->phone_no) ? $request->phone_no : $user->phone_no ;
+                $user->password = !empty(bcrypt($request->new_password)) ? $request->new_password : $user->password ;
+                // $user->updated_by = auth()->user()->id ;
+            $user->save();
+
+            return response()->json([
+                'status'=>true,
+                'message'=>'تم تعديل المعلومات بنجاح'
+            ]);
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "هذا المستخدم غير موجود"
+            ], 401);
+
+        }
+
     }
 
     //User Login -Post
@@ -96,4 +140,5 @@ class UserControlller extends Controller
             "message"=>"تسجيل الخروج تم بنجاح "
         ]);
     }
+
 }

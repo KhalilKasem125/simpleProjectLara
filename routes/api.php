@@ -61,7 +61,7 @@ Route::group(["middleware"=>["auth:api"]],function(){
     Route::get('getQuestions/user/{id}',[QuestionsControlller::class,'getQuestions']);
     Route::get('getOptions/user/{id}',[OptionsControlller::class,'getOptions']);
     Route::get("getSubjects/user",[SubjectsControlller::class,"getSubjects"]);
-
+    Route::put('updateUserInformations/{id}',[UserControlller::class,'updateUserInformations']);
 });
 
     //JWT-Authentication that Adimns should use
@@ -74,6 +74,7 @@ Route::group(["middleware"=>["auth:admin-api"]],function()
         Route::get("show-admins-Info",[AdminsControlller::class,'AdminsInformationsShowing']);
         Route::delete("delete-admin/{id}",[AdminsControlller::class,'AdminDelete']);
         Route::post("registration/admin",[AdminsControlller::class,'AdminRegister']);
+        Route::put("updateAdminInformations/admin/{id}",[AdminsControlller::class,'updateAdminInformations']);
 
     });
 
@@ -114,6 +115,8 @@ Route::group(["middleware"=>["auth:admin-api"]],function()
         Route::get('getSub/admin/{id}',[SubjectsControlller::class,'getOptions']);
         Route::get('getQuestions/admin/{id}',[QuestionsControlller::class,'getQuestions']);
         Route::get('getOptions/admin/{id}',[OptionsControlller::class,'getOptions']);
+        Route::put('updateExam/{exam_id}',[ExamsControlller::class,'updateExam']);
+        Route::put('updateSubject/{sub_id}',[SubjectsControlller::class,'updateSubject']);
 
     });
 });

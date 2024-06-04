@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 class AdminsControlller extends Controller
@@ -125,7 +126,7 @@ class AdminsControlller extends Controller
             ],404);
         }
     }
-    
+
     //That if I want to refresh token
     //Get-
     public function refreshToken(){
@@ -175,6 +176,7 @@ class AdminsControlller extends Controller
         }
     }
 
+    //
     public function logout(){
         auth()->logout();
 
@@ -184,4 +186,37 @@ class AdminsControlller extends Controller
         ]);
     }
 
+    //only superadmin can access this route - put method used
+    public function updateAdminInformations(Request $request , $id){
+
+
+        $admin = Admin::find($id);
+
+        if($admin){
+            if (!Hash::check($request->password, $admin->password)) {
+                return response()->json([
+                    "status" => false,
+                    "message" => "لا يوجد تطابق"
+                ], 401);
+            }
+            $admin->first_name = !empty($request->first_name) ? $request->first_name : $admin->first_name ;
+            $admin->last_name = !empty($request->last_name) ? $request->last_name : $admin->last_name ;
+            $admin->email = !empty($request->email) ? $request->email : $admin->email ;
+            $admin->phone_no = !empty($request->phone_no) ? $request->phone_no : $admin->phone_no ;
+            $admin->password = !empty(bcrypt($request->new_password)) ? $request->new_password : $admin->password ;
+
+            $admin->save();
+            return response()->json([
+                'status'=>true,
+                'message'=>'تم التعديل على معلومات الادمن بنجاح '
+            ],200);
+
+        }else{
+            return response()->json([
+                'status'=>false,
+                'message'=>'الادمن غير موجود'
+            ],401);
+        }
+    }
+    
 }

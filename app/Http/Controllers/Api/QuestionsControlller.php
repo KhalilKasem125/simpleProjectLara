@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Exam;
 use App\Models\Option;
 use App\Models\Question;
@@ -89,7 +90,7 @@ class QuestionsControlller extends Controller
             ], 401);
         }
 
-        
+
         $rules = [
             'options.*.option_text' => 'required|max:50', // Validate each option_text
             'options.*.is_correct' => 'in:true,false', // Validate each is_correct
@@ -184,21 +185,34 @@ class QuestionsControlller extends Controller
     }
 
     public function deleteَQuestion($question_id){
+        $admin_id = auth()->user()->id ;
+        $admin = Admin::find($admin_id);
+        // $find = Admin::where('role','super_admin');
+        // ->Subject::where('created_by',$admin_id)->first();
+        $sup = Question::find($question_id);
 
-        $question_deleted = Question::find($question_id);
+        if($admin->role == 'super_admin' || $sup->created_by == $admin_id ){
 
-        if($question_deleted){
-            $question_deleted->delete();
+            $question_deleted = Question::find($question_id);
 
-            return response()->json([
-                'status'=>true,
-                'message'=>'تم حذف السؤال بنجاح '
-            ]);
+            if($question_deleted){
+                $question_deleted->delete();
+
+                return response()->json([
+                    'status'=>true,
+                    'message'=>'تم حذف السؤال بنجاح '
+                ]);
+            }else{
+                return response()->json([
+                    'status'=>false,
+                    'message'=>"هذا السؤال غير موجود "
+                ],404);
+            }
         }else{
             return response()->json([
-                'status'=>false,
-                'message'=>"هذا السؤال غير موجود "
-            ],404);
+                'status' => true,
+                'message' => 'ليس لديك الصلاحية للقيام بذلك '
+            ],402);
         }
 
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Book;
 use App\Models\Subject;
 use Illuminate\Http\Request;
@@ -63,28 +64,48 @@ class BooksControlller extends Controller
 
     public function deleteBook($id)
     {
-        // Find the PDF object
-        $pdf = Book::find($id);
+        // $admin_id = auth()->user()->id ;
+        // $admin = Admin::find($admin_id);
+        // $find = Admin::where('role','super_admin')
+        // ->orwhere('created_by',$admin_id)->first();
+        // if($find){
 
-        if (!$pdf) {
+        $admin_id = auth()->user()->id ;
+        $admin = Admin::find($admin_id);
+        // $find = Admin::where('role','super_admin');
+        // ->Subject::where('created_by',$admin_id)->first();
+        $boo = Book::find($id);
+
+        if($admin->role == 'super_admin' ||$boo->created_by == $admin_id ){
+            // Find the PDF object
+            $pdf = Book::find($id);
+
+            if (!$pdf) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'الكتاب ليس موجود'
+                ], 404);
+            }
+
+            // Delete the PDF file from storage
+            if (file_exists(public_path('book_files/' . $pdf->book_file))) {
+                unlink(public_path('book_files/' . $pdf->book_file));
+            }
+
+            // Delete the PDF record from the database
+            $pdf->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'تم حذف الكتاب بنجاح '
+            ]);
+
+        }else{
             return response()->json([
                 'status' => false,
-                'message' => 'الكتاب ليس موجود'
-            ], 404);
+                'message' => 'ليس لديك الصلاحية للقيام بذلك '
+            ],402);
         }
 
-        // Delete the PDF file from storage
-        if (file_exists(public_path('book_files/' . $pdf->book_file))) {
-            unlink(public_path('book_files/' . $pdf->book_file));
-        }
-
-        // Delete the PDF record from the database
-        $pdf->delete();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'تم حذف الكتاب بنجاح '
-        ]);
     }
-
 }

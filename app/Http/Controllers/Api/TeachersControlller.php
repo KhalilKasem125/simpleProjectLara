@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -99,6 +100,9 @@ class TeachersControlller extends Controller
         ]);
     }
 
+    public function updateTeacher(Request $request , $id){
+    }
+
     //Only Admins Can access on full Teachers Informations
     //Get
     public function showTeachersDetailsForAdmins($id){
@@ -140,21 +144,35 @@ class TeachersControlller extends Controller
     //Delete
     public function deleteTeacher($id)
     {
+        
+        $admin_id = auth()->user()->id ;
+        $admin = Admin::find($admin_id);
+        // $find = Admin::where('role','super_admin');
+        // ->Subject::where('created_by',$admin_id)->first();
+        $sup = Teacher::find($id);
+
+        if($admin->role == 'super_admin' ||$sup->created_by == $admin_id ){
         //fetch the object with the id
-        $teacher_deleted =Teacher::find($id);
+            $teacher_deleted =Teacher::find($id);
 
-        if($teacher_deleted){
-            $teacher_deleted->delete();
+            if($teacher_deleted){
+                $teacher_deleted->delete();
 
-            return response()->json([
-                "status"=>true,
-                "message"=>"تم حذف المعلم بنجاح "
-            ]);
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"تم حذف المعلم بنجاح "
+                ]);
+            }else{
+                return response()->json([
+                    "status"=>false,
+                    "message"=>"المعلم غير موجود"
+                ],404);
+            }
         }else{
             return response()->json([
-                "status"=>false,
-                "message"=>"المعلم غير موجود"
-            ],404);
+                'status' => true,
+                'message' => 'ليس لديك الصلاحية للقيام بذلك '
+            ],402);
         }
     }
 
