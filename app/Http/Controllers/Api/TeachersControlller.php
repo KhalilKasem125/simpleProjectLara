@@ -9,6 +9,7 @@ use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Mockery\Matcher\Subset;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Validator;
 
 class TeachersControlller extends Controller
 {
@@ -100,7 +101,73 @@ class TeachersControlller extends Controller
         ]);
     }
 
-    public function updateTeacher(Request $request , $id){
+    // public function updateTeacher(Request $request , $id){
+    //     $teacher = Teacher::find($id);
+
+    //     if($teacher){
+    //         $teacher->first_name = !empty($request->first_name) ? $request->first_name : $teacher->first_name ;
+    //         $teacher->last_name = !empty($request->last_name) ? $request->last_name : $teacher->last_name ;
+    //         $teacher->description = !empty($request->description) ? $request->description : $teacher->description ;
+    //         $teacher->phone_no = !empty($request->phone_no) ? $request->phone_no : $teacher->phone_no ;
+    //         $teacher->teaching_duration = !empty($request->teaching_duration) ? $request->teaching_duration : $teacher->teaching_duration ;
+    //         $teacher->updated_by = auth()->user()->id ;
+    //         $teacher->save();
+
+    //         return response()->json([
+    //             'status'=>true,
+    //             'message'=>'تم التعديل على معلومات المعلم بنجاح'
+    //         ]);
+    //     }else{
+    //         return response()->json([
+    //             'status'=>false ,
+    //             'message'=>'المعلم غير موجود'
+    //         ],401);
+    //     }
+
+    // }
+    public function updateTeacher(Request $request, $id) {
+        
+        $teacher = Teacher::find($id);
+
+        if ($teacher) {
+            // 1. Get the current subject_id
+            $subjectId = $teacher->subject_id;
+
+            // 2. Validate for uniqueness within the same subject_id
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'unique:teachers,first_name,' . $id . ',id,subject_id,' . $subjectId,
+                'last_name' => 'unique:teachers,last_name,' . $id . ',id,subject_id,' . $subjectId,
+                'phone_no' => 'unique:teachers,phone_no,' . $id . ',id,subject_id,' . $subjectId, // Add validation for phone_no
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'A teacher with that information already exists for this subject',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // 3. Update teacher details
+            $teacher->first_name = !empty($request->first_name) ? $request->first_name : $teacher->first_name;
+            $teacher->last_name = !empty($request->last_name) ? $request->last_name : $teacher->last_name;
+            $teacher->description = !empty($request->description) ? $request->description : $teacher->description;
+            $teacher->phone_no = !empty($request->phone_no) ? $request->phone_no : $teacher->phone_no;
+            $teacher->teaching_duration = !empty($request->teaching_duration) ? $request->teaching_duration : $teacher->teaching_duration;
+            $teacher->updated_by = auth()->user()->id;
+
+            $teacher->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'تم التعديل على معلومات المعلم بنجاح'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'المعلم غير موجود'
+            ], 401);
+        }
     }
 
     //Only Admins Can access on full Teachers Informations
@@ -144,7 +211,7 @@ class TeachersControlller extends Controller
     //Delete
     public function deleteTeacher($id)
     {
-        
+
         $admin_id = auth()->user()->id ;
         $admin = Admin::find($admin_id);
         // $find = Admin::where('role','super_admin');
@@ -175,7 +242,6 @@ class TeachersControlller extends Controller
             ],402);
         }
     }
-
 
     public function showingAllTeachers(){
 

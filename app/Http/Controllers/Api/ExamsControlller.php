@@ -11,6 +11,7 @@ use App\Models\Subject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Validator;
 
 class ExamsControlller extends Controller
 {
@@ -55,36 +56,81 @@ class ExamsControlller extends Controller
         ]);
 
     }
+
     //update Exam Informations and with adding the admin how did
     //put
-    public function updateExam(Request $request , $id ){
+    // public function updateExam(Request $request , $id ){
+
+    //     $exam = Exam::find($id);
+
+    //     if($exam){
+
+    //         $exam->qestions_number = !empty($request->qestions_number) ? $request->qestions_number : $exam->qestions_number ;
+    //         $exam->exam_day_start_point = !empty($request->exam_day_start_point) ? $request->exam_day_start_point : $exam->exam_day_start_point ;
+    //         $exam->exam_day_end_point = !empty($request->exam_day_end_point) ? $request->exam_day_end_point : $exam->exam_day_end_point ;
+    //         $exam->Exam_Name = !empty($request->Exam_Name) ? $request->Exam_Name : $exam->Exam_Name ;
+    //         $exam->exam_time = !empty($request->exam_time) ? $request->exam_time : $exam->exam_time ;
+    //         $exam->success_degree = !empty($request->success_degree) ? $request->success_degree : $exam->success_degree ;
+    //         $exam->updated_by = auth()->user()->id;
+    //         $exam->save();
+
+    //         return response()->json([
+    //             'status'=>true,
+    //             'message'=>'تم التعديل على معلومات الامتحان بنجاح'
+    //         ]);
+    //     }else{
+    //         return response()->json([
+    //             'status'=>false ,
+    //             'message'=>'الامتحان غير موجود'
+    //         ],401);
+    //     }
+
+
+
+    // }
+    public function updateExam(Request $request, $id) {
         $exam = Exam::find($id);
 
-        if($exam){
+        if ($exam) {
+            // 1. Get the current subject_id
+            $subjectId = $exam->subject_id;
 
-            $exam->qestions_number = !empty($request->qestions_number) ? $request->qestions_number : $exam->qestions_number ;
-            $exam->exam_day_start_point = !empty($request->exam_day_start_point) ? $request->exam_day_start_point : $exam->exam_day_start_point ;
-            $exam->exam_day_end_point = !empty($request->exam_day_end_point) ? $request->exam_day_end_point : $exam->exam_day_end_point ;
-            $exam->Exam_Name = !empty($request->Exam_Name) ? $request->Exam_Name : $exam->Exam_Name ;
-            $exam->exam_time = !empty($request->exam_time) ? $request->exam_time : $exam->exam_time ;
-            $exam->success_degree = !empty($request->success_degree) ? $request->success_degree : $exam->success_degree ;
+            // 2. Validate for uniqueness within the same subject_id
+            $validator = Validator::make($request->all(), [
+                'Exam_Name' => 'unique:exams,Exam_Name,' . $id . ',id,subject_id,' . $subjectId, // Exclude the current exam and specify subject_id
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Exam name already exists for this subject',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // 3. Update exam details
+            $exam->qestions_number = !empty($request->qestions_number) ? $request->qestions_number : $exam->qestions_number;
+            $exam->exam_day_start_point = !empty($request->exam_day_start_point) ? $request->exam_day_start_point : $exam->exam_day_start_point;
+            $exam->exam_day_end_point = !empty($request->exam_day_end_point) ? $request->exam_day_end_point : $exam->exam_day_end_point;
+            $exam->Exam_Name = !empty($request->Exam_Name) ? $request->Exam_Name : $exam->Exam_Name;
+            $exam->exam_time = !empty($request->exam_time) ? $request->exam_time : $exam->exam_time;
+            $exam->success_degree = !empty($request->success_degree) ? $request->success_degree : $exam->success_degree;
             $exam->updated_by = auth()->user()->id;
+
             $exam->save();
 
             return response()->json([
-                'status'=>true,
-                'message'=>'تم التعديل على معلومات الامتحان بنجاح'
+                'status' => true,
+                'message' => 'تم التعديل على معلومات الامتحان بنجاح'
             ]);
-        }else{
+        } else {
             return response()->json([
-                'status'=>false ,
-                'message'=>'الامتحان غير موجود'
-            ],401);
+                'status' => false,
+                'message' => 'الامتحان غير موجود'
+            ], 401);
         }
-
-
-
     }
+
 
     public function getExams($id){
 
